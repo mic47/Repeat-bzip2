@@ -1,4 +1,4 @@
-=Repeat bzip2 packer=
+#Repeat bzip2 packer
 
 This tool can create massive bzip2 archives quickly. For example if you need to
 create 1EB file full of zero bytes compressed twice (if you do, please contact
@@ -7,7 +7,7 @@ me and tell me **why**), this is the right tool for you. Can create files up to
 create larger archives, current limitation is caused because we are using 64bit
 unsigned integers as pointers to individual bits.
 
-==Usage==
+##Usage
 
 ```
 make
@@ -20,7 +20,7 @@ make
 
 See *generate.sh* and *generate_all.sh* for examples.
 
-==File format==
+##File format
 
 Example (file 1EB.pack)
 ```
@@ -46,7 +46,7 @@ File ends with number 0. If length in bytes/bits are 0, they are estimated.
 Data contain one string without whitespace. For hex data, you can use either
 uppercase or lowercase letters.  Text data cannot contain whitespaces.
 
-==Notes==
+##Notes
 In case of large repetitions, program might crash (there are finite buffers,
 which can be filled up and they are not properly checked). this proram also
 generates *valid* crc checksum (valid for bzip2, in fact I do not believe that
