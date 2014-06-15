@@ -91,7 +91,6 @@ void export_data (int fd, RepData &data) {
             if (written + item.first.bit_len >= buf_size_bits) {
                 unsigned long long wr = 0;
                 wr = write (fd, output, written / 8);
-                fprintf(stderr, "written now: %lld\n", wr);
                 assert (wr == written / 8);
                 output[0] = output[written / 8];
                 written %= 8;

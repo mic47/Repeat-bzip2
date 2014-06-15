@@ -100,7 +100,7 @@ T bit_copy (
     auto output_init_len = 8 - output_offset;
     unsigned char output_init_mask = (1 << output_init_len) - 1;
     auto bit_len = input_end - input_start;
-    //toto prepise cely segment
+    // this rewrites whole segment
     if (output_init_len > bit_len) {
         output_init_mask -= (1 << (output_init_len - bit_len) ) - 1;
     }

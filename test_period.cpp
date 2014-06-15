@@ -16,7 +16,6 @@ void print_data (RepData &data) {
     unsigned long long written = 0;
     unsigned int crc32 = 0U;
     time_t start = time (nullptr);
-    fprintf (stderr, "Computing start: %ld\n", start);
     for (unsigned long long i = 0; i < data.X.second; i++) {
         if (written + data.X.first.bit_len > buf_size_bits) {
             write (1, output, written / 8);
@@ -105,7 +104,6 @@ void print_data (RepData &data) {
                    output,
                    written
                );
-    fprintf (stderr, "crc32: 0x%08x\n", crc32);
     written += bit_copy (
                    crc32_to_crc32_string (crc32),
                    0ULL,
@@ -120,14 +118,13 @@ void print_data (RepData &data) {
     if (written != 0) {
         write (1, output, 1);
     }
-    fprintf (stderr, "COMPUTING CRC32 TOOK: %ld seconds\n", time (nullptr) - start);
 }
 
 int main () {
     unsigned long long base_size = 1024ULL * 1024 * 1024 * 1024;
     RepData data;
     data.X.first.data = (unsigned char*) "\00\00\00\00\00\00\00\00\00";
-    data.X.first.byte_len = 9;// strlen ( (char*) data.X.first.data);
+    data.X.first.byte_len = 9;
     data.X.first.data = (unsigned char*) "ipsc2014\n";
     data.X.first.byte_len = strlen ( (char*) data.X.first.data);
     data.X.first.bit_len = 8 * data.X.first.byte_len;

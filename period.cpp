@@ -81,14 +81,12 @@ bool find_period_with_offset (
                 copy (blocks.begin(), blocks.begin() + before, period.begin() );
                 copy (blocks.begin() + before, blocks.end(), blocks.begin() );
                 blocks.resize (blocks.size() - before);
-                //fprintf (stderr, "Period found with prefix\n");
                 return true;
             }
             psearch[remainder] = blocks_c;
             if (remainder == 0) {
                 done = true;
                 found = true;
-                //fprintf (stderr, "Period found\n");
                 break;
             }
         }
@@ -96,9 +94,6 @@ bool find_period_with_offset (
             break;
         }
 
-    }
-    if (!found) {
-        //fprintf (stderr, "Period not found\n");
     }
     return found;
 }
@@ -215,7 +210,6 @@ RepData compress_items (RepData data) {
     for (unsigned int i = 0; i < data.items.size(); i++) {
         vector<BZ2Block> blocks;
         vector<BZ2Block> period;
-        //fprintf (stderr, "entering item %d (count %d)\n", i, data.items[i].second);
         auto found =
             find_period_with_offset (
                 data.items[i].first,
@@ -233,7 +227,6 @@ RepData compress_items (RepData data) {
             data.items[i].second -= period_data / data.items[i].first.bit_len;
             input_offset_bit = period_data % data.items[i].first.bit_len;
 
-            //fprintf (stderr, "pushing %d prefix items\n", period.size() );
             output.items.push_back (
                 make_pair (
                     bz2blocks_to_repitem (period),
@@ -257,7 +250,6 @@ RepData compress_items (RepData data) {
                 X_count--;
             }
             data.items[i].second -= inputs_in_period * X_count;
-            //fprintf (stderr, "pushing %d period items %lld times\n", blocks.size(), X_count);
             output.items.push_back (
                 make_pair (
                     bz2blocks_to_repitem (blocks),
@@ -326,14 +318,12 @@ RepData compress_items (RepData data) {
                     finished = true;
                     break;
                 }
-                //if(next_index < 2)fprintf(stderr, "Adding data %d (next_count: %lld, second: %lld) -- (%lld %lld)\n", next_index, next_count, data.items[next_index].second, sent_data, data_thresh);
                 splitter.addData (data.items[next_index].first);
                 sent_data += data.items[next_index].first.bit_len;
                 next_count++;
             }
         }
         if (blocks.size() > 0) {
-            //fprintf (stderr, "pushing %d excess items\n", blocks.size() );
             output.items.push_back (
                 make_pair (
                     bz2blocks_to_repitem (blocks),
@@ -346,16 +336,12 @@ RepData compress_items (RepData data) {
         }
         auto excess_bits = total_bits_out - data_to_recover;
         next_index = i + 1;
-        if (excess_bits > 0) {
-            //fprintf (stderr, "peeking into item %d\n", next_index);
-        }
         next_count = 0;
         input_offset_bit = 0;
         while (excess_bits > 0) {
             if (next_count > data.items[next_index].second) {
                 next_index += 1;
                 next_count = 0;
-                //fprintf (stderr, "peeking into item %d\n", next_index);
             }
             if (excess_bits >= data.items[next_index].first.bit_len) {
                 excess_bits -= data.items[next_index].first.bit_len;
